@@ -1,0 +1,6 @@
+[push]
+	default = matching
+[core]
+	editor = vim
+[user]
+	name = Daniel Bershatsky
