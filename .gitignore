@@ -1,0 +1,10 @@
+# ignore python environmens
+env/
+
+# ignore python cache
+__pycache__/
+
+# ignore vim swap files
+*.go.swp
+*.py.swp
+.*.swp

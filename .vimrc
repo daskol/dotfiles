@@ -1,3 +1,23 @@
+set nocompatible
+set mouse-=a
+
+syntax on
+filetype on
+filetype plugin on
+filetype indent on
+
+" Save cursor position
+augroup resCur
+  au!
+  au BufReadPost * call setpos(".", getpos("'\""))
+augroup END
+
+" Spell checking
+au FileType tex setlocal spell spelllang=en_us,ru
+
+" Clipboard
+set clipboard=unnamedstar  " see :help 'clipboard'
+
 " Number of spaces that a <Tab> in the file counts for.  Also see
 " |:retab| command, and 'softtabstop' option.
 set tabstop=4
@@ -34,9 +54,73 @@ set expandtab
 set smartindent
 
 " Fix YAML indentation and filetype detection for RAML
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+au FileType yaml,html,vue setlocal ts=2 sts=2 sw=2 expandtab
 au BufRead,BufNewFile *.raml set filetype=yaml
 
+" Fix Cucumber indentation
+au FileType cucumber setlocal ts=2 sts=2 sw=2 expandtab
 
-" Wrap long line for Tex
-au BufRead,BufNewFile *.tex set ai si textwidth=120
+" Spell checking for tex
+au FileType tex set spelllang=en,ru
+
+" Wrap long line for Tex, Markdown and text file
+au BufRead,BufNewFile *.tex set ai si textwidth=79
+au BufRead,BufNewFile *.txt set ai si textwidth=79
+"au BufRead,BufNewFile *.md set ai si textwidth=79 formatoptions+=a
+
+" Mail file format for Mutt
+au BufRead,BufNewFile *mutt-* setfiletype mail
+
+" Line break
+au FileType python set breakindentopt=shift:4
+
+" Russian keyboard layout in commnad mode
+"set langmap=!\\"№\\;%?*ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕHГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;!@#$%&*`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
+
+" Search settings
+set smartcase
+set incsearch
+set hlsearch
+
+" Vim status line and tab line settings
+set showtabline=2
+set laststatus=2
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#statusline#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" Tagbar plugin intergration from gotags
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+
+" Supertab plugin settings
+let g:SuperTabNoCompleteAfter = ['^', '\s', '#', '//', '^--', ',', '\''', '{', '}', ':', ';', '!', '(', ')', '/', '`', '*', '-', ']']
+
+" EasyTags settings
+set tag=./tags,../tags,../../tags
