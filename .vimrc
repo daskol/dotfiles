@@ -124,3 +124,10 @@ let g:SuperTabNoCompleteAfter = ['^', '\s', '#', '//', '^--', ',', '\''', '{', '
 
 " EasyTags settings
 set tag=./tags,../tags,../../tags
+
+" Tabs mapping. It is require setting up your terminal emulator to map
+" Control-Tab and Control-Shift-Tab to pseudo escape sequences keys
+" correspondetly.
+map <C-n> :tabnew<CR>
+map [control~tab$ :tabn<CR>
+map [control~shift~tab$ :tabp<CR>
