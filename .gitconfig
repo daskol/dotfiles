@@ -1,6 +1,7 @@
-[push]
-	default = matching
-[core]
-	editor = vim
 [user]
-	name = Daniel Bershatsky
+    name = Daniel Bershatsky
+[core]
+    editor = vim
+    excludesfile = ~/.gitignore
+[grep]
+    lineNumber = true
