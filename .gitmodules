@@ -1,0 +1,3 @@
+[submodule ".gdb/gdb-colour-filter"]
+	path = .gdb/gdb-colour-filter
+	url = https://github.com/daskol/gdb-colour-filter.git
