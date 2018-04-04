@@ -39,7 +39,7 @@ URxvt.scrollBar:                      false
 !URxvt.tripleclickwords:               boolean
 !URxvt.insecure:                       boolean
 !URxvt.cursorUnderline:                boolean
-!URxvt.cursorBlink:                    boolean
+URxvt.cursorBlink:                    true
 !URxvt.pointerBlank:                   boolean
 URxvt.background:                     black
 URxvt.foreground:                     white
@@ -48,6 +48,8 @@ URxvt.foreground:                     white
 !URxvt.color2:                         color
 !URxvt.color3:                         color
 !URxvt.color4:                         color
+!URxvt.color4:                         #1919ff
+URxvt.color4:                         #3333ff
 !URxvt.color5:                         color
 !URxvt.color6:                         color
 !URxvt.color7:                         color
@@ -87,7 +89,7 @@ URxvt.font:                           xft:Noto Mono for Powerline:size=13.5
 !URxvt.imFont:                         fontname
 !URxvt.title:                          string
 !URxvt.iconName:                       string
-URxvt.saveLines:                      2000
+URxvt.saveLines:                      3000
 !URxvt.buffered:                       boolean
 !URxvt.depth:                          number
 !URxvt.visual:                         number

@@ -8,12 +8,12 @@ filetype indent on
 
 " Save cursor position
 augroup resCur
-  au!
-  au BufReadPost * call setpos(".", getpos("'\""))
+  autocmd!
+  autocmd BufReadPost * call setpos(".", getpos("'\""))
 augroup END
 
 " Spell checking
-au FileType tex setlocal spell spelllang=en_us,ru
+autocmd FileType tex setlocal spell spelllang=en_us,ru
 
 " Clipboard
 set clipboard=unnamedstar  " see :help 'clipboard'
@@ -54,7 +54,7 @@ set expandtab
 set smartindent
 
 " Fix YAML indentation and filetype detection for RAML
-au FileType yaml,html,vue setlocal ts=2 sts=2 sw=2 expandtab
+au FileType yaml,html,vue,xml setlocal ts=2 sts=2 sw=2 expandtab
 au BufRead,BufNewFile *.raml set filetype=yaml
 
 " Fix Cucumber indentation
@@ -69,7 +69,7 @@ au BufRead,BufNewFile *.txt set ai si textwidth=79
 "au BufRead,BufNewFile *.md set ai si textwidth=79 formatoptions+=a
 
 " Mail file format for Mutt
-au BufRead,BufNewFile *mutt-* setfiletype mail
+autocmd BufRead,BufNewFile *mutt-* setfiletype mail
 
 " Line break
 au FileType python set breakindentopt=shift:4
@@ -123,11 +123,15 @@ let g:tagbar_type_go = {
 let g:SuperTabNoCompleteAfter = ['^', '\s', '#', '//', '^--', ',', '\''', '{', '}', ':', ';', '!', '(', ')', '/', '`', '*', '-', ']']
 
 " EasyTags settings
-set tag=./tags,../tags,../../tags
+set tag=./.tags,../.tags,../../.tags
 
 " Tabs mapping. It is require setting up your terminal emulator to map
 " Control-Tab and Control-Shift-Tab to pseudo escape sequences keys
 " correspondetly.
-map <C-n> :tabnew<CR>
-map [control~tab$ :tabn<CR>
-map [control~shift~tab$ :tabp<CR>
+nmap <C-n> :tabnew<CR>
+nmap [control~tab$ :tabn<CR>
+nmap [control~shift~tab$ :tabp<CR>
+
+" Vim Pad settings.
+set runtimepath^=~/.vim/vim-pad
+let g:pad#dir = "~/.notes/"
