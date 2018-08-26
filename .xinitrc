@@ -2,7 +2,9 @@
 [[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
 
 while true; do
-    xsetroot -name "$( date +'%F %R' )"
+    BATTERY=$(acpi -b | awk '{ print $4 }' | tr ',' ' ')
+    DATE=$(date +'%F %R')
+    xsetroot -name "Bat: $BATTERY $DATE"
     sleep 20s    # Время обновления
 done &
 

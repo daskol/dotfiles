@@ -20,6 +20,9 @@ promptinit
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
+# Move over path segments
+local WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -51,10 +54,12 @@ setprompt
 alias st='st -f "Liberation Mono:size=12"'
 alias ls='ls --color=auto -h'
 alias grep='grep --color=auto'
+alias vi='/usr/bin/nvim'
 
 # Default environment variables
 export GOPATH="$HOME/proj"
 export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:/opt/intel/bin"
 
 # Export context variables
 export PGHOST=localhost
@@ -63,6 +68,7 @@ export PGUSER=postgres
 export LESS="-iMSx4 -FX"
 
 export MYSQL_HOME=~/.config/mysql
+export XDG_CONFIG_HOME=~/.config
 
 # Key bindings
 autoload zkbd
