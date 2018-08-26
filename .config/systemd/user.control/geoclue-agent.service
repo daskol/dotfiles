@@ -1,0 +1,10 @@
+[Unit]
+Description=Location Lookup Service Agent
+Docs=https://gitlab.freedesktop.org/geoclue/geoclue
+
+[Service]
+Type=simple
+ExecStart=/usr/lib/geoclue-2.0/demos/agent
+
+[Install]
+WantedBy=geoclue.service
