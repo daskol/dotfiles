@@ -1,0 +1,10 @@
+[Unit]
+Description=Golang Web Documentation
+Documentation=https://godoc.org/golang.org/x/tools/cmd/godoc
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/godoc -http=:6060
+
+[Install]
+WantedBy=golang.service
