@@ -1,7 +1,13 @@
 [user]
     name = Daniel Bershatsky
 [core]
-    editor = vim
+    editor = nvim
     excludesfile = ~/.gitignore
 [grep]
     lineNumber = true
+[color "blame"]
+    highlightRecent = blue,12 month ago,yellow,1 month ago,red
+    colorLines = cyan
+    repeatedLines = cyan
+[blame]
+    coloring = repeatedLines
