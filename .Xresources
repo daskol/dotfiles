@@ -105,7 +105,11 @@ URxvt.saveLines:                      3000
 !URxvt.pointerBlankDelay:              number
 !URxvt.backspacekey:                   string
 !URxvt.deletekey:                      string
-!URxvt.print-pipe:                     string
+
+! The string will be interpreted as if typed into the shell as-is.
+! In this example, printing will be disabled altogether.
+URxvt.print-pipe:                     "cat > /dev/null"
+
 !URxvt.modifier:                       modifier
 !URxvt.cutchars:                       string
 !URxvt.answerbackString:               string
