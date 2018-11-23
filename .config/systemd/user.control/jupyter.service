@@ -1,0 +1,10 @@
+[Unit]
+Description=Jupyter Notebook
+Documentation=
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/jupyter-notebook --notebook-dir=/home/bershatsky/proj/src --no-browser
+
+[Install]
+WantedBy=jupyter.service
