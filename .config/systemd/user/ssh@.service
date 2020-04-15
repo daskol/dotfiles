@@ -1,0 +1,10 @@
+[Unit]
+Description=SSH tunnel to %i
+After=syslog.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/ssh -N -F %h/.ssh/config -N %i
