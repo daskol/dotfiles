@@ -13,38 +13,47 @@ set smartindent
 set mouse=a
 
 call plug#begin('~/.config/nvim/plugged')
-"    Plug 'vim-airline/vim-airline'
-    Plug 'zchee/vim-flatbuffers'
-    Plug 'dgryski/vim-godef'
-"    Plug 'martinda/Jenkinsfile-vim-syntax'
 
-   " assuming your using vim-plug: https://github.com/junegunn/vim-plug
-    Plug 'ncm2/ncm2'
+    Plug 'kien/ctrlp.vim'
+    Plug 'mileszs/ack.vim'
     Plug 'roxma/nvim-yarp'
+    Plug 'scrooloose/nerdtree'
 
     " NOTE: you need to install completion sources to get completions. Check
     " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+    Plug 'ncm2/ncm2'
     Plug 'ncm2/ncm2-bufword'
+    Plug 'ncm2/ncm2-go'
+    Plug 'ncm2/ncm2-jedi'
     Plug 'ncm2/ncm2-path'
-
+    Plug 'ncm2/ncm2-pyclang'
     Plug 'ncm2/ncm2-syntax'
     Plug 'Shougo/neco-syntax'
 
-    Plug 'ncm2/ncm2-jedi'
-    Plug 'ncm2/ncm2-go'
+    Plug 'chlorophyllin/vim-bazel'
 
-    " Remove this due to deprecation of nvim-completion-manager.
-    "Plug 'scrooloose/nerdtree'
-    "Plug 'ervandew/supertab'
-"    Plug 'roxma/nvim-completion-manager'
+    " Plug 'chr4/nginx.vim'           " Nginx syntax highlighting
+    " Plug 'dylon/vim-antlr'          " Antlr syntax highlighting
+    " Plug 'elubow/cql-vim'           " Cassandra Query Language (CQL)
+    " Plug 'flammie/vim-conllu'       " CoNLL file format
+    " Plug 'hashivim/vim-terraform'   " Terraform syntax highlighting
+    " Plug 'keith/swift.vim'
+    " Plug 'kelwin/vim-smali'
+    " Plug 'martinda/Jenkinsfile-vim-syntax'
+    " Plug 'rhysd/vim-llvm'
+    " Plug 'tfnico/vim-gradle'        " Android and Java development
+    " Plug 'vim-scripts/bnf.vim'
+    " Plug 'zchee/vim-flatbuffers'
+    " Plug 'neovimhaskell/haskell-vim'
 
+    " TODO: Don't known what this does.
     Plug 'autozimu/LanguageClient-neovim', {
         \ 'branch': 'next',
         \ 'do': 'bash install.sh',
         \ }
 
     " (Optional) Multi-entry selection UI.
-    Plug 'junegunn/fzf'
+    "Plug 'junegunn/fzf'
 call plug#end()
 
 " enable ncm2 for all buffers
