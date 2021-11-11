@@ -1,10 +1,8 @@
-let g:python_host_prog = '/usr/bin/python'
-let g:python3_host_prog = '/usr/bin/python3'
-
 set nocompatible
 set background=dark
 set number
 
+set scrolloff=2
 set tabstop=4
 set shiftwidth=4
 set smarttab
@@ -12,8 +10,11 @@ set expandtab
 set smartindent
 set mouse=a
 
-call plug#begin('~/.config/nvim/plugged')
+" Prefer to use Python 3.
+let g:python_host_prog = '/usr/bin/python3'
+let g:python3_host_prog = '/usr/bin/python3'
 
+call plug#begin('~/.config/nvim/plugged')
     Plug 'kien/ctrlp.vim'
     Plug 'mileszs/ack.vim'
     Plug 'roxma/nvim-yarp'
@@ -73,14 +74,6 @@ augroup resCur
   autocmd BufReadPost * call setpos(".", getpos("'\""))
 augroup END
 
-augroup syntaxHighlighting
-    au BufRead,BufNewFile *.raml set filetype=yaml
-    au BufRead,BufNewFile *.yml set filetype=yaml
-
-    " Fix YAML indentation and filetype detection for RAML
-    au FileType yaml,html,vue,xml setlocal ts=2 sts=2 sw=2 expandtab
-augroup END
-
 " Search settings
 set smartcase
 set incsearch
@@ -98,10 +91,11 @@ let g:airline_extensions = ['term', 'quickfix', 'keymap', 'po', 'branch', 'tabli
 " neovim-compiletion-manager
 set shortmess+=c
 
-noremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+" Use <TAB> to select the popup menu:
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-n>" : "\<S-Tab>"
+noremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
 " Tabs mapping. It is require setting up your terminal emulator to map
 " Control-Tab and Control-Shift-Tab to pseudo escape sequences keys
@@ -111,10 +105,7 @@ noremap !@#control-tab$ :tabn<CR>
 noremap !@#control-shift-tab$ :tabp<CR>
 
 set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
-
-set nowrap
-let g:godef_split=2
-let g:go_highlight_variable_declarations = 1
+set wrap
 
 " Set up basic folding: za/zc/zo and [z/]z. Type :help fold for details.
 set foldmethod=syntax
@@ -132,4 +123,112 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 set list
 set listchars=tab:\ \ ,precedes:<,extends:>
 
-let g:lisp_rainbow = 1
+set tags=tags
+
+set autoread
+
+" Setiup CtrtP plugin.
+set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,.env/*,*.egg-info/*,*/env/*,*/node_modules/*,*/__pycache__/*
+
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/](\.(git|hg|svn|egg-info|dvc|env)|build)$',
+    \ 'file': '\v\.(a|so|pyc)$',
+    \ }
+
+" Function and autocommand in autogroup for formatting on pre-write event.
+
+func FormatBuffer(formatter)
+    if &modified
+        let cursor_pos = getpos('.')
+        execute ':%!' . a:formatter
+        call setpos('.', cursor_pos)
+    endif
+endfunction
+
+augroup Autoformat
+    autocmd BufWritePre *.h,*.hh,*.hpp,*.c,*.cc,*.cpp :call FormatBuffer('clang-format')
+    autocmd BufWritePre *.py :call FormatBuffer('yapf')
+    autocmd BufWritePre *.rs :call FormatBuffer('rustfmt')
+    autocmd BufWritePre *.vert,*.frag :call FormatBuffer('clang-format')
+
+    au FileType c,cpp setlocal formatprg=clang-format
+    au FileType json setlocal formatprg=jq\ .
+    au FileType rust setlocal formatprg=rustfmt
+augroup END
+
+" Set up language specific options.
+
+augroup ANTLR
+    au BufRead,BufNewFile *.g set filetype=antlr4
+    au BufRead,BufNewFile *.g4 set filetype=antlr4
+augroup END
+
+augroup Common
+    " Fix YAML indentation and filetype detection for RAML
+    au FileType yaml,html,vue,xml setlocal ts=2 sts=2 sw=2 expandtab
+
+    " Setup JavaScrupt indentation
+    au FileType javascript setlocal ts=2 sts=2 sw=2 expandtab
+augroup END
+
+augroup CXX
+    func! Goto_declaration_new_tab()
+        let pos = ncm2_pyclang#find_declaration()
+        if empty(pos)
+            return
+        endif
+        let filepath = expand("%:p")
+        if filepath != pos.file
+            let fes = fnameescape(pos.file)
+            exe 'tabnew' fes
+        else
+            normal! m'
+        endif
+        call cursor(pos.lnum, pos.bcol)
+    endfunc
+
+    au!
+    au FileType c,cpp nnoremap <buffer> gd :<c-u>call Goto_declaration_new_tab()<cr>
+augroup END
+
+augroup Jinja
+    au BufRead,BufNewFile *.j2 set filetype=jinja
+augroup END
+
+augroup YAML
+    au BufRead,BufNewFile *.yml,*.raml set filetype=yaml
+    au BufRead,BufNewFile .clang-format set syntax=yaml
+augroup END
+
+augroup LaTeX
+    au BufRead,BufNewFile *.tex setlocal filetype=tex wrap
+augroup END
+
+augroup Rust
+    au FileType rust set signcolumn=yes
+augroup END
+
+let g:terraform_align=0
+let g:terraform_fold_sections=0
+let g:terraform_fmt_on_save=1
+
+augroup Terraform
+    au!
+    au BufRead,BufNewFile *.tf set filetype=terraform
+augroup END
+
+let g:LanguageClient_windowLogMessageLevel = 'Log'
+let g:LanguageClient_loggingFile = expand('~/LanguageClient.log')
+let g:LanguageClient_loggingLevel = 'INFO'
+let g:LanguageClient_serverCommands = {
+    \ 'txt': ['tcp://127.0.0.1:5272'],
+    \ 'rust': ['rls'],
+    \ 'terraform': ['terraform-ls', 'serve', '-log-file', '/tmp/lsp-terraform.log'],
+    \ }
+
+" Set up ack for comprehensive search in a workspace
+let g:ackprg = 'ag -s --vimgrep'
+nnoremap g/ :Ack<Space>
