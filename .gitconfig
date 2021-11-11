@@ -1,5 +1,3 @@
-[user]
-    name = Daniel Bershatsky
 [core]
     editor = nvim
     excludesfile = ~/.gitignore
@@ -11,3 +9,9 @@
     repeatedLines = cyan
 [blame]
     coloring = repeatedLines
+[pull]
+	ff = only
+[user]
+	name = Daniel Bershatsky
+[init]
+	defaultBranch = main

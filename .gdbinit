@@ -14,5 +14,3 @@ document threads
 Syntax: threads
 | Print threads in target.
 end
-
-source ~/.gdb/gdb-colour-filter/colour_filter.py
