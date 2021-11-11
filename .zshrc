@@ -25,9 +25,10 @@ local WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
-setopt appendhistory autocd extendedglob
+HISTSIZE=50000
+SAVEHIST=50000
+setopt appendhistory autocd extendedglob # new settings nomatch notify
+unsetopt beep
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
@@ -51,9 +52,9 @@ setprompt() {
 setprompt
 
 # Setup aliases
-alias st='st -f "Liberation Mono:size=12"'
-alias ls='ls --color=auto -h'
+alias diff='diff -u --color=auto'
 alias grep='grep --color=auto'
+alias ls='ls --color=auto -h'
 alias vi='/usr/bin/nvim'
 
 # Key bindings
@@ -73,3 +74,16 @@ bindkey "^X^E" edit-command-line
 bindkey '[1;5D' emacs-backward-word
 bindkey '[1;5C' emacs-forward-word
 bindkey '^[[3^' kill-word
+
+# Set up completion
+plugins=(
+    man
+    pip
+)
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/vault vault
+complete -o nospace -C /usr/bin/terraform terraform
+
+# Initialize zoxide.
+eval "$(zoxide init zsh)"
