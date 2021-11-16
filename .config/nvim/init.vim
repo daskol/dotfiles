@@ -144,13 +144,72 @@ func FormatBuffer(formatter)
     if &modified
         let cursor_pos = getpos('.')
         execute ':%!' . a:formatter
+        if v:shell_error
+            undo
+        endif
         call setpos('.', cursor_pos)
     endif
 endfunction
 
-augroup Autoformat
+function! FormatBufferPy() range
+    if !&modified
+        return
+    endif
+
+    " Save cursor position and window state.
+    let l:cur_win = winsaveview()
+
+    " Determine range to format.
+    let l:line_ranges = a:firstline . '-' . a:lastline
+    let l:cmd = 'yapf --lines=' . l:line_ranges
+
+    " Call YAPF with the current buffer
+    let l:lines = systemlist(l:cmd, join(getline(1, '$'), "\n") . "\n")
+
+    " Show location list if formatting error occures. Otherwise, check whether
+    " location list exists then close it if the list exists.
+    if v:shell_error
+        echohl ErrorMsg
+        echomsg printf('ERROR "%s" returned error: "%s"', l:cmd, l:lines[-1])
+        echohl None
+
+        let l:filename = expand('%')
+        let l:lineno = str2nr(matchlist(l:lines[-4], 'line \(\d\+\)$', 1)[1])
+        let l:colidx = matchstrpos(l:lines[-2], '\^')[1]
+
+        call setloclist(0, [], 'r', {
+            \ 'title': 'YAPF Errors',
+            \ 'context': 'yapf',
+            \ })
+
+        call setloclist(0, [{
+            \ 'col': l:colidx,
+            \ 'filename': l:filename,
+            \ 'lnum': l:lineno,
+            \ 'text': l:lines[-1],
+            \ 'type': 'E',
+            \ 'vcol': 1,
+            \ }], 'a')
+
+        " Show only one error and exit.
+        "lopen 1
+        return
+    elseif !empty(getloclist(0))
+        lclose
+        call setloclist(0, [], 'f')
+    endif
+
+    " Update the buffer.
+    execute '1,' . string(line('$')) . 'delete'
+    call setline(1, l:lines)
+
+    " Restore cursor position and window state.
+    call winrestview(l:cur_win)
+endfunction
+
+augroup Atutoformat
     autocmd BufWritePre *.h,*.hh,*.hpp,*.c,*.cc,*.cpp :call FormatBuffer('clang-format')
-    autocmd BufWritePre *.py :call FormatBuffer('yapf')
+    autocmd BufWritePre *.py :call FormatBufferPy()
     autocmd BufWritePre *.rs :call FormatBuffer('rustfmt')
     autocmd BufWritePre *.vert,*.frag :call FormatBuffer('clang-format')
 
