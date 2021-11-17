@@ -257,6 +257,15 @@ augroup Jinja
     au BufRead,BufNewFile *.j2 set filetype=jinja
 augroup END
 
+function! LintPython()
+    cexpr system('flake8 ' . expand('%'))
+    cwindow
+endfunction
+
+augroup Python
+    au FileType python nmap gl :call LintPython()<cr>
+augroup END
+
 augroup YAML
     au BufRead,BufNewFile *.yml,*.raml set filetype=yaml
     au BufRead,BufNewFile .clang-format set syntax=yaml
