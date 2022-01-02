@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Jupyter Notebook Open
+Comment=Open Jupyter Notebook
+Exec=jupyter-notebook-open %f
+Terminal=true
+Type=Application
+Icon=notebook
+StartupNotify=true
+MimeType=application/x-ipynb+json;
+Categories=Development;Education;Science;
+Keywords=python;

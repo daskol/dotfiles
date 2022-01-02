@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# jupyter-notebook-open
+#
+# The scipt opens Jupyter notebook with XDG in browser.
+
+notebook_dir=/home/$USER/proj/src
+notebook_path=$(realpath --relative-to $notebook_dir $1)
+notebook_uri="http://jupyter:8888/tree/${notebook_path}"
+xdg-open $notebook_uri
