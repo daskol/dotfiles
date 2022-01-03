@@ -15,6 +15,15 @@ let g:python_host_prog = '/usr/bin/python3'
 let g:python3_host_prog = '/usr/bin/python3'
 
 call plug#begin('~/.config/nvim/plugged')
+    " NOTE Lines below break completion without explicit completion selection.
+    "" Advanced LSP support
+    "Plug 'neovim/nvim-lspconfig'
+    "" NOTE Uncomment the following for lsp-lm testing.
+    """ Autocompletion in Lua
+    "Plug 'hrsh7th/cmp-nvim-lsp'
+    "Plug 'hrsh7th/cmp-buffer'
+    "Plug 'hrsh7th/nvim-cmp'
+
     Plug 'kien/ctrlp.vim'
     Plug 'mileszs/ack.vim'
     Plug 'roxma/nvim-yarp'
@@ -24,7 +33,7 @@ call plug#begin('~/.config/nvim/plugged')
     " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
     Plug 'ncm2/ncm2'
     Plug 'ncm2/ncm2-bufword'
-    Plug 'ncm2/ncm2-go'
+    "Plug 'ncm2/ncm2-go'
     Plug 'ncm2/ncm2-jedi'
     Plug 'ncm2/ncm2-path'
     Plug 'ncm2/ncm2-pyclang'
@@ -60,8 +69,8 @@ call plug#end()
 " enable ncm2 for all buffers
 autocmd BufEnter * call ncm2#enable_for_buffer()
 
-" IMPORTANTE: :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
+" IMPORTANT: :help Ncm2PopupOpen for more information
+set completeopt=menuone,noinsert,noselect
 
 syntax on
 filetype on
@@ -291,10 +300,11 @@ augroup END
 let g:LanguageClient_windowLogMessageLevel = 'Log'
 let g:LanguageClient_loggingFile = expand('~/LanguageClient.log')
 let g:LanguageClient_loggingLevel = 'INFO'
+let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_serverCommands = {
-    \ 'txt': ['tcp://127.0.0.1:5272'],
+    \ 'go': ['gopls', 'serve'],
     \ 'rust': ['rls'],
-    \ 'terraform': ['terraform-ls', 'serve', '-log-file', '/tmp/lsp-terraform.log'],
+    \ 'terraform': ['terraform-ls', 'serve'],
     \ }
 
 " Set up ack for comprehensive search in a workspace
