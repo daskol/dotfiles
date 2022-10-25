@@ -101,6 +101,7 @@ URxvt.saveLines:                      5000
 !URxvt.borderLess:                     boolean
 !URxvt.lineSpace:                      number
 !URxvt.letterSpace:                    number
+URxvt.letterSpace:                    -1
 !URxvt.skipBuiltinGlyphs:              boolean
 !URxvt.pointerBlankDelay:              number
 !URxvt.backspacekey:                   string
