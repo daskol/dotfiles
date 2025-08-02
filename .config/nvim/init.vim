@@ -1,7 +1,8 @@
 set nocompatible
 set background=dark
-set number
+colorscheme vim
 
+set number
 set scrolloff=2
 set tabstop=4
 set shiftwidth=4
@@ -12,41 +13,46 @@ set mouse=a
 set formatoptions+=n
 
 " Prefer to use Python 3.
+let g:loaded_python3_provider = 0
+let g:loaded_pythonx_provider = 0
 let g:python_host_prog = '/usr/bin/python3'
-let g:python3_host_prog = '/usr/bin/python3'
 
 call plug#begin('~/.config/nvim/plugged')
     " NOTE Lines below break completion without explicit completion selection.
-    "" Advanced LSP support
-    "Plug 'neovim/nvim-lspconfig'
-    "" NOTE Uncomment the following for lsp-lm testing.
-    """ Autocompletion in Lua
-    "Plug 'hrsh7th/cmp-nvim-lsp'
-    "Plug 'hrsh7th/cmp-buffer'
-    "Plug 'hrsh7th/nvim-cmp'
+    " Advanced LSP support
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/nvim-cmp'
+
+    " " Lanaguge Models.
+    " Plug 'huggingface/llm.nvim'
 
     Plug 'kien/ctrlp.vim'
-    Plug 'mileszs/ack.vim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'scrooloose/nerdtree'
+    " Plug 'mileszs/ack.vim'
+    " Plug 'roxma/nvim-yarp'
+    " Plug 'scrooloose/nerdtree'
 
     " NOTE: you need to install completion sources to get completions. Check
     " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-    Plug 'ncm2/ncm2'
-    Plug 'ncm2/ncm2-bufword'
-    Plug 'ncm2/ncm2-jedi'
-    Plug 'ncm2/ncm2-path'
-    Plug 'ncm2/ncm2-pyclang'
-    Plug 'ncm2/ncm2-syntax'
-    Plug 'Shougo/neco-syntax'
+    " Plug 'ncm2/ncm2'
+    " Plug 'ncm2/ncm2-bufword'
+    " Plug 'ncm2/ncm2-jedi'
+    " Plug 'ncm2/ncm2-path'
+    " Plug 'ncm2/ncm2-pyclang'
+    " Plug 'ncm2/ncm2-syntax'
+    " Plug 'Shougo/neco-syntax'
 
-    Plug 'chlorophyllin/vim-bazel'
+    " Plug 'HiPhish/jinja.vim'
+    " Plug 'chlorophyllin/vim-bazel'
 
     " Plug 'chr4/nginx.vim'           " Nginx syntax highlighting
     " Plug 'dylon/vim-antlr'          " Antlr syntax highlighting
     " Plug 'elubow/cql-vim'           " Cassandra Query Language (CQL)
     " Plug 'flammie/vim-conllu'       " CoNLL file format
     " Plug 'hashivim/vim-terraform'   " Terraform syntax highlighting
+    Plug 'jvirtanen/vim-hcl'
     " Plug 'keith/swift.vim'
     " Plug 'kelwin/vim-smali'
     " Plug 'martinda/Jenkinsfile-vim-syntax'
@@ -56,18 +62,29 @@ call plug#begin('~/.config/nvim/plugged')
     " Plug 'zchee/vim-flatbuffers'
     " Plug 'neovimhaskell/haskell-vim'
 
-    " TODO: Don't known what this does.
-    Plug 'autozimu/LanguageClient-neovim', {
-        \ 'branch': 'next',
-        \ 'do': 'bash install.sh',
-        \ }
+    " Typesetting.
+    Plug 'kaarmu/typst.vim'
+
+    " Formatting.
+    " Plug 'darrikonn/vim-gofmt'
+
+    " " TODO: Don't known what this does.
+    " Plug 'autozimu/LanguageClient-neovim', {
+    "     \ 'branch': 'next',
+    "     \ 'do': 'bash install.sh',
+    "     \ }
+
+    Plug 'nvim-treesitter/nvim-treesitter'
+    Plug 'nvim-treesitter/playground'
 
     " (Optional) Multi-entry selection UI.
     "Plug 'junegunn/fzf'
 call plug#end()
 
+source $HOME/.config/nvim/lsp.lua
+
 " enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
+"autocmd BufEnter * call ncm2#enable_for_buffer()
 
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=menuone,noinsert,noselect
@@ -92,19 +109,21 @@ set hlsearch
 set showtabline=2
 set laststatus=2
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#statusline#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline_extensions = ['term', 'quickfix', 'keymap', 'po', 'branch', 'tabline', 'wordcount', 'whitespace']
-
 " neovim-compiletion-manager
 set shortmess+=c
+
+" Hover popup window has weird color scheme. Fix it with assigning the same
+" normal color scheme to floating windows.
+highlight link NormalFloat Normal
 
 " Use <TAB> to select the popup menu:
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 noremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+" Map <Esc> to terminal exit command.
+tnoremap <Esc> <C-\><C-n>
 
 " Tabs mapping. It is require setting up your terminal emulator to map
 " Control-Tab and Control-Shift-Tab to pseudo escape sequences keys
@@ -137,13 +156,13 @@ set tags=tags
 set autoread
 
 " Setiup CtrtP plugin.
-set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,.env/*,*.egg-info/*,*/env/*,*/node_modules/*,*/__pycache__/*
+set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,.env/*,*.egg-info/*,*/env/*,*/node_modules/*,*/__pycache__/*,*.tfevents.*,log/*
 
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/](\.(git|hg|svn|egg-info|dvc|env)|build|data|dist)$',
+    \ 'dir':  '\v[\/](\.(git|hg|svn|egg-info|dvc|env)|build|data|dist|target)$',
     \ 'file': '\v\.(a|so|pyc)$',
     \ }
 
@@ -201,7 +220,7 @@ function! FormatBufferPy() range
             \ }], 'a')
 
         " Show only one error and exit.
-        lopen 1
+        " lopen 1  " XXX Uncomment this.
         return
     elseif !empty(getloclist(0))
         lclose
@@ -219,12 +238,13 @@ endfunction
 augroup Autoformat
     autocmd BufWritePre *.h,*.hh,*.hpp,*.c,*.cc,*.cu,*.cpp :call FormatBuffer('clang-format')
     autocmd BufWritePre *.py :call FormatBufferPy()
-    autocmd BufWritePre *.rs :call FormatBuffer('rustfmt')
+    " autocmd BufWritePre *.rs :call FormatBuffer('rustfmt --edition 2021')
     autocmd BufWritePre *.vert,*.frag :call FormatBuffer('clang-format')
+    " autocmd BufWritePre *.go :GoFmt
 
     au FileType c,cpp setlocal formatprg=clang-format
     au FileType json setlocal formatprg=jq\ .
-    au FileType rust setlocal formatprg=rustfmt
+    " au FileType rust setlocal formatprg=rustfmt
 augroup END
 
 " Set up language specific options.
@@ -242,37 +262,28 @@ augroup Common
     au FileType javascript setlocal ts=2 sts=2 sw=2 expandtab
 augroup END
 
-augroup CXX
-    func! Goto_declaration_new_tab()
-        let pos = ncm2_pyclang#find_declaration()
-        if empty(pos)
-            return
-        endif
-        let filepath = expand("%:p")
-        if filepath != pos.file
-            let fes = fnameescape(pos.file)
-            exe 'tabnew' fes
-        else
-            normal! m'
-        endif
-        call cursor(pos.lnum, pos.bcol)
-    endfunc
-
-    au!
-    au FileType c,cpp nnoremap <buffer> gd :<c-u>call Goto_declaration_new_tab()<cr>
-augroup END
-
 augroup Jinja
     au BufRead,BufNewFile *.j2 set filetype=jinja
 augroup END
 
 function! LintPython()
-    cexpr system('flake8 ' . expand('%'))
+    cexpr system('ruff check -q --output-format=concise ' . expand('%'))
     cwindow
 endfunction
 
+function! Sync()
+    system('make sync')
+endfunction
+
 augroup Python
+    au FileType python setlocal errorformat^=%*[^:]:\ %f:%l:%c:\ %m
+    au FileType python setlocal shellpipe=&>
+    au FileType python setlocal makeprg=yapf\ -i\ %
+    command Fmt :silent :make!
+
+    au FileType python nmap gf :Fmt<cr>
     au FileType python nmap gl :call LintPython()<cr>
+    au FileType python nmap gs :call Sync()<cr>
 augroup END
 
 augroup YAML
@@ -288,6 +299,10 @@ augroup Rust
     au FileType rust set signcolumn=yes
 augroup END
 
+augroup Typst
+    au BufRead,BufNewFile *.typ setlocal filetype=typst
+augroup END
+
 let g:terraform_align=0
 let g:terraform_fold_sections=0
 let g:terraform_fmt_on_save=1
@@ -297,22 +312,45 @@ augroup Terraform
     au BufRead,BufNewFile *.tf set filetype=terraform
 augroup END
 
-augroup TXT
-    set completefunc=LanguageClient#complete
-
-    au BufRead,BufNewFile *.txt set filetype=txt
-    au BufRead,BufNewFile *.txt set wrap
+augroup Tex
+    nmap <C-Down> gj
+    nmap <C-Up> gk
 augroup END
 
-let g:LanguageClient_windowLogMessageLevel = 'Log'
-let g:LanguageClient_loggingFile = expand('~/LanguageClient.log')
-let g:LanguageClient_loggingLevel = 'INFO'
-let g:LanguageClient_diagnosticsEnable = 0
-let g:LanguageClient_serverCommands = {
-    \ 'go': ['gopls', 'serve'],
-    \ 'rust': ['rls'],
-    \ 'terraform': ['terraform-ls', 'serve'],
-    \ }
+" augroup Haskell
+"     au BufWritePre *.hs lua vim.lsp.buf.formatting_sync()
+" augroup END
+
+augroup Typst
+    au FileType typst nmap gl :make<cr><cr>:copen<cr>
+    autocmd QuickFixCmdPost [^l]* nested cwindow
+    autocmd QuickFixCmdPost    l* nested lwindow
+augroup END
+
+" XXX Uncomment these lines to test lsp-lm
+"
+"augroup TXT
+"    set completefunc=LanguageClient#complete
+"
+"    au BufRead,BufNewFile *.txt set filetype=txt
+"    au BufRead,BufNewFile *.txt set wrap
+"augroup END
+
+" let g:LanguageClient_windowLogMessageLevel = 'Log'
+" let g:LanguageClient_loggingFile = expand('~/.cache/LanguageClient.log')
+" let g:LanguageClient_loggingLevel = 'INFO'
+" let g:LanguageClient_diagnosticsEnable = 0
+" let g:LanguageClient_serverCommands = {
+"     \ 'c': ['clangd'],
+"     \ 'cpp': ['clangd', '--background-index', '--compile-commands-dir', 'build'],
+"     \ 'cuda': ['clangd', '--background-index', '--compile-commands-dir', 'build'],
+"     \ 'go': ['gopls', 'serve'],
+"     \ 'haskell': ['haskell-language-server-wrapper', 'lsp'],
+"     \ 'rust': ['rust-analyzer'],
+"     \ 'terraform': ['terraform-ls', 'serve'],
+"     \ 'txt': ['tcp://127.0.0.1:5272'],
+"     \ 'typst': ['typst-lsp'],
+"     \ }
 
 " Set up ack for comprehensive search in a workspace
 let g:ackprg = 'ag -s --vimgrep'
