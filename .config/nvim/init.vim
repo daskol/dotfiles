@@ -9,6 +9,7 @@ set smarttab
 set expandtab
 set smartindent
 set mouse=a
+set formatoptions+=n
 
 " Prefer to use Python 3.
 let g:python_host_prog = '/usr/bin/python3'
@@ -33,7 +34,6 @@ call plug#begin('~/.config/nvim/plugged')
     " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
     Plug 'ncm2/ncm2'
     Plug 'ncm2/ncm2-bufword'
-    "Plug 'ncm2/ncm2-go'
     Plug 'ncm2/ncm2-jedi'
     Plug 'ncm2/ncm2-path'
     Plug 'ncm2/ncm2-pyclang'
@@ -143,7 +143,7 @@ let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/](\.(git|hg|svn|egg-info|dvc|env)|build)$',
+    \ 'dir':  '\v[\/](\.(git|hg|svn|egg-info|dvc|env)|build|data|dist)$',
     \ 'file': '\v\.(a|so|pyc)$',
     \ }
 
@@ -201,7 +201,7 @@ function! FormatBufferPy() range
             \ }], 'a')
 
         " Show only one error and exit.
-        "lopen 1
+        lopen 1
         return
     elseif !empty(getloclist(0))
         lclose
@@ -216,8 +216,8 @@ function! FormatBufferPy() range
     call winrestview(l:cur_win)
 endfunction
 
-augroup Atutoformat
-    autocmd BufWritePre *.h,*.hh,*.hpp,*.c,*.cc,*.cpp :call FormatBuffer('clang-format')
+augroup Autoformat
+    autocmd BufWritePre *.h,*.hh,*.hpp,*.c,*.cc,*.cu,*.cpp :call FormatBuffer('clang-format')
     autocmd BufWritePre *.py :call FormatBufferPy()
     autocmd BufWritePre *.rs :call FormatBuffer('rustfmt')
     autocmd BufWritePre *.vert,*.frag :call FormatBuffer('clang-format')
@@ -295,6 +295,13 @@ let g:terraform_fmt_on_save=1
 augroup Terraform
     au!
     au BufRead,BufNewFile *.tf set filetype=terraform
+augroup END
+
+augroup TXT
+    set completefunc=LanguageClient#complete
+
+    au BufRead,BufNewFile *.txt set filetype=txt
+    au BufRead,BufNewFile *.txt set wrap
 augroup END
 
 let g:LanguageClient_windowLogMessageLevel = 'Log'
